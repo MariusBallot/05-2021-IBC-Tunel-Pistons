@@ -9,20 +9,18 @@ class Pistons {
         this.bind()
         this.params = {
             instNum: {
-                x: 5,
+                x: 16,
                 y: 10,
                 z: 40
             },
-            offset: {
-                x: window.innerWidth * 0.0027,
-                y: window.innerHeight * 0.0027,
-                z: .5
-            },
+            zOffset: .5,
             scaleFac: .15,
             zSpeed: 0.001,
             waveFreq: 1,
             spacingFac: .36,
         }
+        this.aR = window.innerWidth / window.innerHeight
+
 
         const pf = MyGUI.addFolder('Pistons')
         pf.open()
@@ -65,8 +63,8 @@ class Pistons {
                 c2.rotation.x = Math.PI
                 let xp = (x - (this.params.instNum.x - 1) / 2) * this.params.spacingFac
 
-                c1.position.set(xp, -this.params.offset.y, -z * this.params.offset.z);
-                c2.position.set(xp, this.params.offset.y, -z * this.params.offset.z);
+                c1.position.set(xp, -2, -z * this.params.zOffset);
+                c2.position.set(xp, 2, -z * this.params.zOffset);
                 this.pistons.add(c1, c2)
             }
             for (let y = 0; y < this.params.instNum.y; y++) {
@@ -76,8 +74,9 @@ class Pistons {
                 c2.rotation.z = -Math.PI / 2
                 let yp = (y - this.params.instNum.y / 2) * this.params.spacingFac
 
-                c1.position.set(this.params.offset.x, yp, -z * this.params.offset.z);
-                c2.position.set(-this.params.offset.x, yp, -z * this.params.offset.z);
+                c1.position.set(2 * this.aR, yp, -z * this.params.zOffset);
+                c2.position.set(-2 * this.aR, yp, -z * this.params.zOffset);
+                console.log(c2.position)
                 this.pistons.add(c1, c2)
             }
         }
@@ -94,7 +93,7 @@ class Pistons {
 
             this.pistons.children[i].position.z += this.params.zSpeed * RAF.dt
             if (this.pistons.children[i].position.z >= 0) {
-                this.pistons.children[i].position.z = -this.params.instNum.z * this.params.offset.z
+                this.pistons.children[i].position.z = -this.params.instNum.z * this.params.zOffset
             }
 
             i++
@@ -104,8 +103,7 @@ class Pistons {
     }
 
     resize() {
-        this.params.offset.x = window.innerWidth * 0.0027;
-        this.params.offset.y = window.innerHeight * 0.0027;
+        this.aR = window.innerWidth / window.innerHeight
         this.instancePistons()
     }
 
