@@ -47,13 +47,16 @@ class MainThreeScene {
         CamParallax.init(this.camera)
 
         const cF = MyGUI.addFolder('Camera')
+        cF.open()
         cF.add(CamParallax, "active").name('Cam Parallax').onChange(() => {
-            this.controls.enabled = false
-        })
+            if (CamParallax.active) {
+                this.controls.enabled = false
+            }
+        }).listen()
         cF.add(this.controls, "enabled").name('Orbit Cam').onChange(() => {
-            CamParallax.active = false
-        })
-
+            if (this.controls.enabled)
+                CamParallax.active = false
+        }).listen()
         Pistons.init(this.scene)
         Tunel.init(this.scene)
 
